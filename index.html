@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Forca</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .hidden-word {
+            font-size: 24px;
+            letter-spacing: 10px;
+        }
+        .message {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+        <h1>Jogo da Forca</h1>
+
+        <div id="word-container" class="hidden-word"></div>
+        <input type="text" id="letter-input" maxlength="1" placeholder="Digite uma letra" />
+        <button onclick="guessLetter()">Adivinhar</button>
+        <p id="remaining-guesses"></p>
+        <p id="message" class="message"></p>
+       
+        <script>
+            const word = "desenvolvimentowebsite";  // Palavra com 20 letras
+            let hiddenWord = word.replace(/./g, "_");
+            let remainingGuesses = 6;  // Quantidade de tentativas
+            let guessedLetters = [];
+       
+            document.getElementById("word-container").textContent = hiddenWord;
+            document.getElementById("remaining-guesses").textContent = `Tentativas restantes: ${remainingGuesses}`;
+       
+            function guessLetter() {
+                const input = document.getElementById("letter-input").value.toLowerCase();
+                if (input.length !== 1 || guessedLetters.includes(input)) {
+                    document.getElementById("message").textContent = "Digite uma letra válida que ainda não tenha sido usada.";
+                    return;
+                }
+       
+                guessedLetters.push(input);
+                document.getElementById("letter-input").value = "";
+       
+                if (word.includes(input)) {
+                    for (let i = 0; i < word.length; i++) {
+                        if (word[i] === input) {
+                            hiddenWord = hiddenWord.substr(0, i) + input + hiddenWord.substr(i + 1);
+                        }
+                    }
+                } else {
+                    remainingGuesses--;
+                }
+       
+                document.getElementById("word-container").textContent = hiddenWord;
+                document.getElementById("remaining-guesses").textContent = `Tentativas restantes: ${remainingGuesses}`;
+       
+                if (hiddenWord === word) {
+                    document.getElementById("message").textContent = "Parabéns! Você venceu!";
+                    document.getElementById("letter-input").disabled = true;
+                } else if (remainingGuesses <= 0) {
+                    document.getElementById("message").textContent = `Você perdeu! A palavra era: ${word}`;
+                    document.getElementById("letter-input").disabled = true;
+                }
+            }
+        </script>
+       
+        </body>
+        </html>
